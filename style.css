@@ -1,0 +1,426 @@
+/* ==========================================================================
+   CONFIGURAÇÕES GERAIS E PALETA DE CORES (Acessível, Clean, Modo Saúde)
+   ========================================================================== */
+:root {
+  --primary: #005A9C;         /* Azul Hospitalar Institucional */
+  --primary-hover: #004070;
+  --bg-main: #F4F7F9;         /* Cinza/Azul Muito Claro e Descansativo */
+  --card-bg: #FFFFFF;
+  --text-dark: #1A2530;       /* Contraste Elevado */
+  --text-muted: #4A5568;
+  --border-color: #CBD5E0;
+  
+  /* Cores Suaves da Pressão */
+  --status-normal: #E6F4EA;
+  --status-normal-text: #137333;
+  --status-elevated: #FEF7E0;
+  --status-elevated-text: #B06000;
+  --status-stage1: #FFE8D6;
+  --status-stage1-text: #C05621;
+  --status-stage2: #FCE8E6;
+  --status-stage2-text: #C5221F;
+
+  --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --radius: 12px;
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-main);
+  background-color: var(--bg-main);
+  color: var(--text-dark);
+  font-size: 18px; /* Fonte ampliada para fácil leitura de idosos */
+  line-height: 1.6;
+}
+
+/* ==========================================================================
+   CABEÇALHO
+   ========================================================================== */
+.app-header {
+  background-color: var(--primary);
+  color: #FFFFFF;
+  padding: 24px 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.header-content {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.logo-area {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.header-icon {
+  width: 42px;
+  height: 42px;
+  fill: #FFFFFF;
+}
+
+.app-header h1 {
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.subtitle {
+  font-size: 1rem;
+  opacity: 0.9;
+}
+
+.btn-toggle {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #FFF;
+  border: 1px solid #FFF;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   LAYOUT PRINCIPAL E CARDS
+   ========================================================================== */
+.main-container {
+  max-width: 1000px;
+  margin: 24px auto;
+  padding: 0 16px;
+}
+
+.card {
+  background-color: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border-color);
+}
+
+.card h2 {
+  font-size: 1.3rem;
+  color: var(--primary);
+  margin-bottom: 16px;
+  border-bottom: 2px solid var(--bg-main);
+  padding-bottom: 8px;
+}
+
+.section-desc {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+/* ==========================================================================
+   QUADRO DE LEGENDA DE PRESSÃO
+   ========================================================================== */
+.legend-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.dot.green { background-color: #34A853; }
+.dot.yellow { background-color: #FBBC04; }
+.dot.orange { background-color: #FA7B17; }
+.dot.red { background-color: #EA4335; }
+
+.bg-normal { background-color: var(--status-normal); color: var(--status-normal-text); }
+.bg-elevated { background-color: var(--status-elevated); color: var(--status-elevated-text); }
+.bg-stage1 { background-color: var(--status-stage1); color: var(--status-stage1-text); }
+.bg-stage2 { background-color: var(--status-stage2); color: var(--status-stage2-text); }
+
+/* ==========================================================================
+   FORMULÁRIOS E INPUTS (Grandes e Acessíveis)
+   ========================================================================== */
+.grid-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+label {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+input, textarea, select {
+  font-size: 1.1rem;
+  padding: 14px;
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  background-color: #FFF;
+  color: var(--text-dark);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+input:focus, textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(0, 90, 156, 0.2);
+}
+
+.help-text {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.feedback-badge {
+  display: inline-block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 6px;
+  margin-top: 4px;
+}
+
+/* ==========================================================================
+   ESTRUTURA DOS DIAS (7 DIAS)
+   ========================================================================== */
+.day-card {
+  background-color: #FAFCFE;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.day-header {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 12px;
+}
+
+.day-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 600px) {
+  .day-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.period-block {
+  background: #FFF;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #E2E8F0;
+}
+
+.period-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ==========================================================================
+   RESUMO E ESTATÍSTICAS
+   ========================================================================== */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
+}
+
+.metric-box {
+  background-color: #F8FAFC;
+  border: 1px solid var(--border-color);
+  padding: 16px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.metric-label {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.metric-value {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin: 4px 0;
+}
+
+/* ==========================================================================
+   PAINEL DE BOTÕES
+   ========================================================================== */
+.actions-panel {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+}
+
+.btn {
+  flex: 1;
+  min-width: 200px;
+  padding: 18px 24px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.btn svg {
+  width: 24px;
+  height: 24px;
+}
+
+.btn-primary { background-color: var(--primary); color: #FFF; }
+.btn-primary:hover { background-color: var(--primary-hover); }
+
+.btn-secondary { background-color: #4A5568; color: #FFF; }
+.btn-secondary:hover { background-color: #2D3748; }
+
+.btn-accent { background-color: #2D3748; color: #FFF; }
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.print-only {
+  display: none;
+}
+
+/* ==========================================================================
+   REGRAS DE IMPRESSÃO (A4 Perfeito)
+   ========================================================================== */
+@media print {
+  body {
+    background: #FFF;
+    color: #000;
+    font-size: 12pt;
+  }
+
+  .app-header, .btn, .actions-panel, #btn-sync-mode, .help-text {
+    display: none !important;
+  }
+
+  .main-container {
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  .card {
+    box-shadow: none;
+    border: 1px solid #CCC;
+    page-break-inside: avoid;
+    margin-bottom: 12px;
+    padding: 12px;
+  }
+
+  .print-only {
+    display: block;
+  }
+
+  .signature-area {
+    margin-top: 40px;
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+    page-break-inside: avoid;
+  }
+
+  .sig-block {
+    flex: 1;
+    text-align: center;
+  }
+
+  .sig-block hr {
+    border: none;
+    border-top: 1px solid #000;
+    margin-bottom: 8px;
+  }
+}
+/* ==========================================================================
+   ESTILOS DE RECOLHER / EXPANDIR (ACCORDION / SEÇÕES RECOLHÍVEIS)
+   ========================================================================== */
+.card-header-toggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  padding: 0;
+  color: var(--primary);
+  font-family: inherit;
+}
+
+.card-header-toggle h2 {
+  margin-bottom: 0 !important;
+  border-bottom: none !important;
+}
+
+.toggle-icon {
+  font-size: 1.2rem;
+  transition: transform 0.3s ease;
+  font-weight: bold;
+}
+
+.card.collapsed .card-content {
+  display: none;
+}
+
+.card.collapsed .toggle-icon {
+  transform: rotate(-90deg);
+}

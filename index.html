@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mapa da Pressão Arterial - Monitoramento Semanal</title>
+  
+  <!-- CSS -->
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- Chart.js para Gráficos Leves -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <!-- Cabeçalho Principal -->
+  <header class="app-header" role="banner">
+    <div class="header-content">
+      <div class="logo-area">
+        <svg class="header-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path fill="currentColor" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+        </svg>
+        <div>
+          <h1>Mapa de Pressão Arterial</h1>
+          <p class="subtitle">Acompanhamento Médico Semanal</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button id="btn-sync-mode" class="btn-toggle" aria-pressed="false" onclick="toggleStorageMode()">
+          Modo: Local Storage
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-container" role="main">
+
+    <!-- Quadro de Referência / Categorias da Pressão Arterial -->
+    <section class="card legend-card" aria-labelledby="legend-heading">
+      <button type="button" class="card-header-toggle" onclick="toggleSection(this)" aria-expanded="true">
+        <h2 id="legend-heading">Classificação da Pressão Arterial</h2>
+        <span class="toggle-icon">▼</span>
+      </button>
+
+      <div class="card-content">
+        <div class="legend-grid">
+          <div class="legend-item bg-normal">
+            <span class="dot green"></span>
+            <div>
+              <strong>Normal</strong>
+              <small>PAS &lt; 130 e PAD &lt; 85 mmHg</small>
+            </div>
+          </div>
+          <div class="legend-item bg-elevated">
+            <span class="dot yellow"></span>
+            <div>
+              <strong>Normal Limítrofe</strong>
+              <small>PAS 130-139 ou PAD 85-89 mmHg</small>
+            </div>
+          </div>
+          <div class="legend-item bg-stage1">
+            <span class="dot orange"></span>
+            <div>
+              <strong>Hipertensão Leve (Estágio 1)</strong>
+              <small>PAS 140-159 ou PAD 90-99 mmHg</small>
+            </div>
+          </div>
+          <div class="legend-item bg-stage2">
+            <span class="dot red"></span>
+            <div>
+              <strong>Hipertensão Moderada (Estágio 2)</strong>
+              <small>PAS 160-179 ou PAD 100-109 mmHg</small>
+            </div>
+          </div>
+          <div class="legend-item bg-stage2">
+            <span class="dot red"></span>
+            <div>
+              <strong>Hipertensão Grave (Estágio 3)</strong>
+              <small>PAS ≥ 180 ou PAD ≥ 110 mmHg</small>
+            </div>
+          </div>
+          <div class="legend-item bg-stage1">
+            <span class="dot orange"></span>
+            <div>
+              <strong>Hipertensão Sistólica Isolada</strong>
+              <small>PAS ≥ 140 e PAD &lt; 90 mmHg</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Dados Pessoais do Paciente -->
+    <section class="card" aria-labelledby="patient-heading">
+      <button type="button" class="card-header-toggle" onclick="toggleSection(this)" aria-expanded="true">
+        <h2 id="patient-heading">1. Identificação do Paciente</h2>
+        <span class="toggle-icon">▼</span>
+      </button>
+
+      <div class="card-content">
+        <form id="form-patient" class="grid-form">
+          <div class="form-group full-width">
+            <label for="patient-name">Nome Completo *</label>
+            <input type="text" id="patient-name" placeholder="Ex: Maria da Silva" required>
+            <span class="help-text">Digite o nome completo do paciente.</span>
+          </div>
+
+          <div class="form-group">
+            <label for="start-date">Data de Início das Medições *</label>
+            <input type="date" id="start-date" required>
+            <span class="help-text">Dia em que começou as medições.</span>
+          </div>
+
+          <div class="form-group">
+            <label for="birth-date">Data de Nascimento *</label>
+            <input type="date" id="birth-date" onchange="calculateAge()" required>
+            <span class="help-text">Informe a data de nascimento.</span>
+          </div>
+
+          <div class="form-group">
+            <label for="patient-age">Idade</label>
+            <input type="number" id="patient-age" min="0" max="120" placeholder="Anos" readonly>
+            <span class="help-text">Calculado automaticamente.</span>
+          </div>
+
+          <div class="form-group">
+            <label for="patient-phone">Telefone / WhatsApp *</label>
+            <input type="tel" id="patient-phone" placeholder="(00) 00000-0000" oninput="formatPhone(this)" required>
+            <span class="help-text">Digite apenas números com DDD.</span>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- Registros dos 7 Dias -->
+    <section class="card" aria-labelledby="records-heading">
+      <button type="button" class="card-header-toggle" onclick="toggleSection(this)" aria-expanded="true">
+        <h2 id="records-heading">2. Registro das Medições (7 Dias)</h2>
+        <span class="toggle-icon">▼</span>
+      </button>
+
+      <div class="card-content">
+        <p class="section-desc">Preencha os valores de Pressão (ex: 120/80) e Frequência Cardíaca (ex: 72) para cada período.</p>
+
+        <div id="days-container">
+          <!-- Gerado Dinamicamente via JS (Dias 1 a 7) -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Observações Gerais -->
+    <section class="card" aria-labelledby="notes-heading">
+      <button type="button" class="card-header-toggle" onclick="toggleSection(this)" aria-expanded="true">
+        <h2 id="notes-heading">3. Anotações Gerais do Paciente</h2>
+        <span class="toggle-icon">▼</span>
+      </button>
+
+      <div class="card-content">
+        <div class="form-group full-width">
+          <label for="general-notes">Observações Adicionais / Recados para o Médico</label>
+          <textarea id="general-notes" rows="4" placeholder="Escreva aqui se sentiu algo diferente durante a semana, mudanças de remédio ou avisos para seu médico..."></textarea>
+        </div>
+      </div>
+    </section>
+
+    <!-- Resumo e Estatísticas -->
+    <section class="card summary-card" aria-labelledby="summary-heading">
+      <button type="button" class="card-header-toggle" onclick="toggleSection(this)" aria-expanded="true">
+        <h2 id="summary-heading">4. Resumo e Médias das Medições</h2>
+        <span class="toggle-icon">▼</span>
+      </button>
+
+      <div class="card-content">
+        <div class="metrics-grid">
+          <div class="metric-box">
+            <span class="metric-label">Média Sistólica / Diastólica</span>
+            <span class="metric-value" id="avg-bp">-- / --</span>
+            <small class="metric-sub">mmHg</small>
+          </div>
+          <div class="metric-box">
+            <span class="metric-label">Média Frequência Cardíaca</span>
+            <span class="metric-value" id="avg-hr">--</span>
+            <small class="metric-sub">bpm</small>
+          </div>
+          <div class="metric-box">
+            <span class="metric-label">Maior Pressão Medida</span>
+            <span class="metric-value" id="max-bp">-- / --</span>
+          </div>
+          <div class="metric-box">
+            <span class="metric-label">Menor Pressão Medida</span>
+            <span class="metric-value" id="min-bp">-- / --</span>
+          </div>
+          <div class="metric-box">
+            <span class="metric-label">Registros Realizados</span>
+            <span class="metric-value" id="total-records">0 / 14</span>
+          </div>
+          <div class="metric-box">
+            <span class="metric-label">Medições Faltantes</span>
+            <span class="metric-value" id="missing-records">14</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Gráficos de Evolução -->
+    <section class="card" aria-labelledby="charts-heading">
+      <button type="button" class="card-header-toggle" onclick="toggleSection(this)" aria-expanded="true">
+        <h2 id="charts-heading">5. Gráfico de Evolução Semanal</h2>
+        <span class="toggle-icon">▼</span>
+      </button>
+
+      <div class="card-content">
+        <div class="chart-container">
+          <canvas id="bpChart"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- Painel de Ações / Botões Grandes -->
+    <div class="actions-panel">
+      <button class="btn btn-primary" onclick="saveData()">
+        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>
+        Salvar Informações
+      </button>
+
+      <button class="btn btn-secondary" onclick="window.print()">
+        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-4 11H9v-5h6v5zm4-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-2-9H7v4h10V3z"/></svg>
+        Imprimir
+      </button>
+
+      <button class="btn btn-accent" onclick="shareData()">
+        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>
+        Compartilhar
+      </button>
+    </div>
+
+    <!-- Área de Assinatura para Impressão/PDF -->
+    <div class="print-only signature-area">
+      <div class="sig-block">
+        <hr>
+        <p>Assinatura do Paciente</p>
+      </div>
+      <div class="sig-block">
+        <hr>
+        <p>Assinatura e Carimbo do Médico</p>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="app-footer">
+    <p>Sistema de Saúde - Monitoramento de Pressão Arterial | Acessibilidade &amp; Saúde Digital</p>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="script.js"></script>
+</body>
+</html>
